@@ -1,0 +1,5 @@
+TODAY_RED_NUM = "今天上涨的个股数量"
+TODAY_GREEN_NUM = "今天下跌的个股数量"
+TODAY_TOP_NUM = "11月24日实际涨停数量"
+TODAY_NOT_ONE_TOP_NUM = "11月24日不含一字涨停数量"
+TODAY_DOWN_NUM = "11月24日跌停数量"
