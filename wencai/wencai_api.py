@@ -1,5 +1,5 @@
-import pywencai as wc
-from prompt import *
+import wencai.wencai as wc
+from settings import *
 
 
 def acquire_top_num():
@@ -83,7 +83,5 @@ def acquire_many_top_num():
     return len(res)
 
 
-if __name__ == '__main__':
-    print(acquire_top_num())
-    print(acquire_not_one_top_num())
-    print(acquire_down_num())
+def analysis_xxxx():
+    pass

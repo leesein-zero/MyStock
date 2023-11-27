@@ -1,6 +1,6 @@
 import os
 import subprocess
-from prompt import *
+from settings import *
 
 import requests
 
@@ -49,4 +49,11 @@ def headers(cookie=None, user_agent=None):
 
 
 if __name__ == '__main__':
-    print(acquire_red_num())
+    request_data[
+        "add_info"] = "{\"urp\":{\"scene\":1,\"company\":1,\"business\":1,\"addheaderindexes\":\"竞价量;竞价金额;换手率;主力资金流向;个股热度;dde散户数量;集中度90;所属概念;技术形态\",\"indexnamelimit\":\"股票代码;股票简称;最新价;最新涨跌幅;竞价量;竞价金额;换手率;主力资金流向;个股热度;dde散户数量;集中度90;所属概念;技术形态\"},\"contentType\":\"json\"}"
+    request_data["question"] = TODAY_FIRST_TOP_NUM
+    request_data["rsh"] = "Ths_iwencai_Xuangu_phz6l4wqivfibtymqs6loxxes80xmv1t"
+    request_data["token"] = "0ac9529b17010981510355638"
+    res = requests.post(request_url, json=request_data, headers=headers())
+    print(len(res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["data"]["datas"]))
+    print(res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["data"]["datas"][0])

@@ -1,4 +1,6 @@
+import wencai.wencai
 from native import native_api
+from settings import TODAY_MANY_TOP_NUM, tech_condition
 from wencai import wencai_api
 
 if __name__ == '__main__':
@@ -13,3 +15,7 @@ if __name__ == '__main__':
     print("二连板的股票个数：{}".format(wencai_api.acquire_second_top_num()))
     print("三连板的股票个数：{}".format(wencai_api.acquire_third_top_num()))
     print("三连板以上的股票个数：{}".format(wencai_api.acquire_many_top_num()))
+
+    # todo 下面是获取行业概念等的范例
+    res = wencai.wencai.get(query=TODAY_MANY_TOP_NUM, perpage=100, loop=True, add_info=tech_condition)
+    print(res)
