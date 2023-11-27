@@ -1,16 +1,15 @@
-# This is a sample Python script.
+from native import native_api
+from wencai import wencai_api
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    print("上涨的股票个数：{}".format(native_api.acquire_red_num()))
+    print("下跌的股票个数：{}".format(native_api.acquire_green_num()))
+    print("实际涨停的股票个数：{}".format(wencai_api.acquire_top_num()))
+    print("非一字板涨停的股票个数：{}".format(wencai_api.acquire_not_one_top_num()))
+    print("跌停的股票个数：{}".format(wencai_api.acquire_down_num()))
+    print("炸板的股票个数：{}".format(wencai_api.acquire_boom_num()))
+    print("连板的股票个数：{}".format(wencai_api.acquire_continue_num()))
+    print("首板的股票个数：{}".format(wencai_api.acquire_first_top_num()))
+    print("二连板的股票个数：{}".format(wencai_api.acquire_second_top_num()))
+    print("三连板的股票个数：{}".format(wencai_api.acquire_third_top_num()))
+    print("三连板以上的股票个数：{}".format(wencai_api.acquire_many_top_num()))
