@@ -40,6 +40,9 @@ def get_robot_data(**kwargs):
     user_agent = kwargs.get('user_agent', None)
     request_params = kwargs.get('request_params', {})
     add_info = kwargs.get('add_info', "{\"urp\":{\"scene\":1,\"company\":1,\"business\":1},\"contentType\":\"json\"}")
+    # 加了一个analysis 的逻辑
+    analysis = kwargs.get("analysis", False)
+
     data = {
         'perpage': 10,
         'page': 1,
@@ -64,7 +67,7 @@ def get_robot_data(**kwargs):
             headers=headers(cookie, user_agent),
             **request_params
         )
-        params = convert(res)
+        params = convert(res, analysis)
         log and logger.info(f'获取get_robot_data成功')
         return params
 
@@ -180,6 +183,8 @@ def loop_page(loop, row_count, **kwargs):
 def get(loop=False, **kwargs):
     '''获取结果'''
     kwargs = {replace_key(key): value for key, value in kwargs.items()}
+
+    # 真正请求接口时，用于封装的参数
     params = get_robot_data(**kwargs)
     data = params.get('data')
     condition = _.get(data, 'condition')

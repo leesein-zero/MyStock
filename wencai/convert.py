@@ -165,17 +165,16 @@ def multi_show_type_handler(components):
     return result
 
 
-def convert(res):
+def convert(res, is_analysis):
     '''处理get_robot_data的结果'''
     result = json.loads(res.text)
     content = _.get(result, 'data.answer.0.txt.0.content')
     if type(content) == str:
         content = json.loads(content)
     components = content['components']
-    # TODO 底下注释的这一块，干扰了add_info，暂时注释
+    # TODO 底下注释的这一块，是抄来的源码，然后我改了一下
 
-    # params = {}
-    # if (len(components) == 1 and _.get(components[0], 'show_type') == 'xuangu_tableV1'):
+    # if len(components) == 1 and _.get(components[0], 'show_type') == 'xuangu_tableV1':
     #     params = {
     #         'data': xuangu_tableV1_handler(components[0], components),
     #         'row_count': _.get(components[0], 'data.meta.extra.row_count')
@@ -184,7 +183,15 @@ def convert(res):
     #     params = {
     #         'data': multi_show_type_handler(components)
     #     }
-    params = {
-        'data': multi_show_type_handler(components)
-    }
+
+    params = {}
+    if is_analysis:
+        params = {
+            'data': multi_show_type_handler(components)
+        }
+    else:
+        params = {
+            'data': xuangu_tableV1_handler(components[0], components),
+            'row_count': _.get(components[0], 'data.meta.extra.row_count')
+        }
     return params

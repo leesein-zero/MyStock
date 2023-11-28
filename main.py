@@ -17,5 +17,5 @@ if __name__ == '__main__':
     print("三连板以上的股票个数：{}".format(wencai_api.acquire_many_top_num()))
 
     # todo 下面是获取行业概念等的范例
-    res = wencai.wencai.get(query=TODAY_MANY_TOP_NUM, perpage=100, loop=True, add_info=tech_condition)
+    res = wencai.wencai.get(query=TODAY_MANY_TOP_NUM, perpage=100, loop=True, add_info=tech_condition, analysis=True)
     print(res)
