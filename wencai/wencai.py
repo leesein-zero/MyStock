@@ -44,7 +44,7 @@ def get_robot_data(**kwargs):
     analysis = kwargs.get("analysis", False)
 
     data = {
-        'perpage': 10,
+        'perpage': 100,
         'page': 1,
         'source': 'Ths_iwencai_Xuangu',
         'secondary_intent': query_type,

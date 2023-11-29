@@ -1,9 +1,9 @@
-import wencai.wencai
 from native import native_api
-from settings import TODAY_MANY_TOP_NUM, tech_condition
+from settings import *
 from wencai import wencai_api
 
 if __name__ == '__main__':
+    # 市场晴雨表
     print("上涨的股票个数：{}".format(native_api.acquire_red_num()))
     print("下跌的股票个数：{}".format(native_api.acquire_green_num()))
     print("实际涨停的股票个数：{}".format(wencai_api.acquire_top_num()))
@@ -16,6 +16,12 @@ if __name__ == '__main__':
     print("三连板的股票个数：{}".format(wencai_api.acquire_third_top_num()))
     print("三连板以上的股票个数：{}".format(wencai_api.acquire_many_top_num()))
 
-    # todo 下面是获取行业概念等的范例
-    res = wencai.wencai.get(query=TODAY_MANY_TOP_NUM, perpage=100, loop=True, add_info=tech_condition, analysis=True)
-    print(res)
+    # 板块晴雨表
+    # 总涨停
+    wencai_api.analysis_by_prompt(TODAY_TOP_NUM, 10)
+    wencai_api.analysis_by_prompt(TODAY_FIRST_TOP_NUM, 10)
+    wencai_api.analysis_by_prompt(TODAY_SECOND_TOP_NUM, 10)
+    wencai_api.analysis_by_prompt(TODAY_THIRD_TOP_NUM, 10)
+    wencai_api.analysis_by_prompt(TODAY_MANY_TOP_NUM, 10)
+
+    wencai_api.analysis_by_prompt(TODAY_DOWN_NUM, 10)

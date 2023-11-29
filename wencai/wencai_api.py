@@ -1,3 +1,5 @@
+from collections import Counter
+
 import wencai.wencai as wc
 from settings import *
 
@@ -83,5 +85,50 @@ def acquire_many_top_num():
     return len(res)
 
 
-def analysis_xxxx():
-    pass
+def analysis_by_prompt(prompt, topn):
+    analysis_hy_by_prompt(prompt, topn)
+    analysis_gn_by_prompt(prompt, topn)
+
+
+def analysis_gn_by_prompt(prompt, topn):
+    """
+    分析 prompt 选出股票的概念
+    :param prompt:
+    :param topn:
+    :return:
+    """
+    print(">>>>>>>>>> 概念分布：{} >>>>>>>>>>".format(prompt))
+
+    gn_res = wc.get(query=prompt, perpage=100, loop=True, add_info=tech_condition, analysis=True)
+    print("共{}只股票".format(len(gn_res.get("xuangu_tableV1"))))
+
+    flattened_list = []
+    for i in gn_res.get("xuangu_tableV1")["所属概念"]:
+        flattened_list.extend(i.split(";"))
+    element_counts = Counter(flattened_list)
+
+    print("概念top10: ")
+    for x in element_counts.most_common(topn):
+        print(x)
+
+
+def analysis_hy_by_prompt(prompt, topn):
+    """
+    分析 prompt 选出股票的行业
+    :param prompt:
+    :param topn:
+    :return:
+    """
+    print(">>>>>>>>>> 行业分布：{} >>>>>>>>>>".format(prompt))
+
+    hy_res = wc.get(query=prompt, perpage=100, loop=True, add_info=summary_condition, analysis=True)
+    print("共{}只股票".format(len(hy_res.get("xuangu_tableV1"))))
+
+    flattened_list = []
+    for i in hy_res.get("xuangu_tableV1")["所属同花顺行业"]:
+        flattened_list.append(i.split("-")[1])
+    element_counts = Counter(flattened_list)
+
+    print("行业top10: ")
+    for x in element_counts.most_common(topn):
+        print(x)
