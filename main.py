@@ -25,3 +25,4 @@ if __name__ == '__main__':
     wencai_api.analysis_by_prompt(TODAY_MANY_TOP_NUM, 10)
 
     wencai_api.analysis_by_prompt(TODAY_DOWN_NUM, 10)
+    wencai_api.analysis_by_prompt(TODAY_BOOM_NUM, 10)

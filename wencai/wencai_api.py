@@ -1,5 +1,6 @@
 from collections import Counter
 
+import settings
 import wencai.wencai as wc
 from settings import *
 
@@ -105,6 +106,10 @@ def analysis_gn_by_prompt(prompt, topn):
     flattened_list = []
     for i in gn_res.get("xuangu_tableV1")["所属概念"]:
         flattened_list.extend(i.split(";"))
+
+    # 过滤不需要的概念关键字
+    flattened_list = [i for i in flattened_list if i not in settings.gn_filter]
+
     element_counts = Counter(flattened_list)
 
     print("概念top10: ")
@@ -126,7 +131,10 @@ def analysis_hy_by_prompt(prompt, topn):
 
     flattened_list = []
     for i in hy_res.get("xuangu_tableV1")["所属同花顺行业"]:
-        flattened_list.append(i.split("-")[1])
+        hy = i.split("-")[1]
+        if hy in settings.hy_filter:
+            continue
+        flattened_list.append(hy)
     element_counts = Counter(flattened_list)
 
     print("行业top10: ")
