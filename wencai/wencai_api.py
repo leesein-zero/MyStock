@@ -5,106 +5,85 @@ import wencai.wencai as wc
 from settings import *
 
 
-def acquire_top_num():
-    """
-    今天涨停数
-    :return: num
-    """
-    res = wc.get(query=TODAY_TOP_NUM, perpage=100, loop=True)
-    return len(res)
-
-
-def acquire_not_one_top_num():
-    """
-    今天非一字涨停
-    :return: num
-    """
-    res = wc.get(query=TODAY_NOT_ONE_TOP_NUM, perpage=100, loop=True)
-    return len(res)
-
-
-def acquire_down_num():
-    """
-    今天跌停数
-    :return:num
-    """
-    res = wc.get(query=TODAY_DOWN_NUM, perpage=100, loop=True)
-    return len(res)
-
-
-def acquire_boom_num():
-    """
-    今天炸板数
-    :return: num
-    """
-    res = wc.get(query=TODAY_BOOM_NUM, perpage=100, loop=True)
-    return len(res)
-
-
-def acquire_continue_num():
-    """
-    今天连板数（包含二板及以上）
-    :return: num
-    """
-    res = wc.get(query=TODAY_CONTINUE_TOP_NUM, perpage=100, loop=True)
-    return len(res)
-
-
-def acquire_first_top_num():
-    """
-    今天首板数
-    :return: num
-    """
-    res = wc.get(query=TODAY_FIRST_TOP_NUM, perpage=100, loop=True)
-    return len(res)
-
-
-def acquire_second_top_num():
-    """
-    今天二连板数
-    :return: num
-    """
-    res = wc.get(query=TODAY_SECOND_TOP_NUM, perpage=100, loop=True)
-    return len(res)
-
-
-def acquire_third_top_num():
-    """
-    今天三连板数
-    :return: num
-    """
-    res = wc.get(query=TODAY_THIRD_TOP_NUM, perpage=100, loop=True)
-    return len(res)
-
-
-def acquire_many_top_num():
-    """
-    今天三连板以上数
-    :return: num
-    """
-    res = wc.get(query=TODAY_MANY_TOP_NUM, perpage=100, loop=True)
-    return len(res)
-
-
 def analysis_by_prompt(prompt, topn):
-    analysis_hy_by_prompt(prompt, topn)
-    analysis_gn_by_prompt(prompt, topn)
-
-
-def analysis_gn_by_prompt(prompt, topn):
     """
-    分析 prompt 选出股票的概念
+    根据prompt，分析相应股票的行业与概念
     :param prompt:
     :param topn:
     :return:
     """
-    print(">>>>>>>>>> 概念分布：{} >>>>>>>>>>".format(prompt))
+    prompt = prompt + "，股票简称不包含st"
+    stocks = __acquire_stock_list(prompt, hy_condition)
+    __analysis_hy(stocks, topn)
 
-    gn_res = wc.get(query=prompt, perpage=100, loop=True, add_info=tech_condition, analysis=True)
-    print("共{}只股票".format(len(gn_res.get("xuangu_tableV1"))))
+    stocks = __acquire_stock_list(prompt, gn_condition)
+    __analysis_gn(stocks, topn)
 
+
+def analysis_leader():
+    """
+    主要统计市场高标
+    1）市场高度是多少
+    2）前五个吧，高标有哪些，分别有什么行业，概念
+    :return:
+    """
+    print("正在获取高标名称>>>>>>>>>>>")
+    headers = __acquire_stock_list(TODAY_HEADERS_SORT, normal_condition)
+    print("正在获取高标行业数据>>>>>>>>>>>")
+    headers_with_hy = __acquire_stock_list(TODAY_HEADERS_SORT, hy_condition)
+    print("正在获取高标概念数据>>>>>>>>>>>")
+    headers_with_gn = __acquire_stock_list(TODAY_HEADERS_SORT, gn_condition)
+
+    output = "名称：{}  板数：{}  行业：{}  概念：{}"
+    ban_num_columns = headers.columns[5]
+    for i in range(5):
+        print(output.format(headers.get("股票简称")[i],
+                            headers.get(ban_num_columns)[i],
+                            headers_with_hy.get("xuangu_tableV1")["所属同花顺行业"][i],
+                            headers_with_gn.get("xuangu_tableV1")["所属概念"][i]
+                            ))
+
+
+def __acquire_stock_list(prompt, condition):
+    """
+    根据prompt与查询条件获取个股初始数据
+    :param prompt: 提示语
+    :return: list
+    """
+    if condition == "" or condition == normal_condition:
+        return wc.get(query=prompt, perpage=100, loop=True)
+    return wc.get(query=prompt, perpage=100, loop=True, add_info=condition, analysis=True)
+
+
+def __analysis_hy(stock_list, topn):
+    """
+    根据传入的股票列表，分析行业
+    :param stock_list:
+    :param topn:
+    :return:
+    """
     flattened_list = []
-    for i in gn_res.get("xuangu_tableV1")["所属概念"]:
+    for i in stock_list.get("xuangu_tableV1")["所属同花顺行业"]:
+        hy = i.split("-")[1]
+        if hy in settings.hy_filter:
+            continue
+        flattened_list.append(hy)
+    element_counts = Counter(flattened_list)
+
+    print("行业top10: ")
+    for x in element_counts.most_common(topn):
+        print(x)
+
+
+def __analysis_gn(stock_list, topn):
+    """
+    根据传入的股票列表，分析概念
+    :param stock_list:
+    :param topn:
+    :return:
+    """
+    flattened_list = []
+    for i in stock_list.get("xuangu_tableV1")["所属概念"]:
         flattened_list.extend(i.split(";"))
 
     # 过滤不需要的概念关键字
@@ -113,30 +92,5 @@ def analysis_gn_by_prompt(prompt, topn):
     element_counts = Counter(flattened_list)
 
     print("概念top10: ")
-    for x in element_counts.most_common(topn):
-        print(x)
-
-
-def analysis_hy_by_prompt(prompt, topn):
-    """
-    分析 prompt 选出股票的行业
-    :param prompt:
-    :param topn:
-    :return:
-    """
-    print(">>>>>>>>>> 行业分布：{} >>>>>>>>>>".format(prompt))
-
-    hy_res = wc.get(query=prompt, perpage=100, loop=True, add_info=summary_condition, analysis=True)
-    print("共{}只股票".format(len(hy_res.get("xuangu_tableV1"))))
-
-    flattened_list = []
-    for i in hy_res.get("xuangu_tableV1")["所属同花顺行业"]:
-        hy = i.split("-")[1]
-        if hy in settings.hy_filter:
-            continue
-        flattened_list.append(hy)
-    element_counts = Counter(flattened_list)
-
-    print("行业top10: ")
     for x in element_counts.most_common(topn):
         print(x)

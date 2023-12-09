@@ -15,14 +15,13 @@ request_data = {
 request_url = "https://www.iwencai.com/customized/chart/get-robot-data"
 
 
-def acquire_red_num():
-    request_data["question"] = TODAY_RED_NUM
-    res = requests.post(request_url, json=request_data, headers=headers())
-    return res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["data"]["meta"]["extra"]["code_count"]
-
-
-def acquire_green_num():
-    request_data["question"] = TODAY_GREEN_NUM
+def count_stocks_num(prompt):
+    """
+    对查询条件筛选出的个股计数
+    :param prompt:
+    :return:
+    """
+    request_data["question"] = prompt
     res = requests.post(request_url, json=request_data, headers=headers())
     return res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["data"]["meta"]["extra"]["code_count"]
 
