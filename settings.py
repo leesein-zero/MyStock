@@ -8,7 +8,7 @@ TODAY_CONTINUE_TOP_NUM = "今天连板的股票数量"
 TODAY_FIRST_TOP_NUM = "今天首板的股票数量"
 TODAY_SECOND_TOP_NUM = "今天二连板的股票数量"
 TODAY_THIRD_TOP_NUM = "今天三连板的股票数量"
-TODAY_MANY_TOP_NUM = "今天三连板以上的股票数量"
+TODAY_MANY_TOP_NUM = "今天的连续涨停天数大于三"
 
 TODAY_HEADERS_SORT = "股票简称不包含st，今天涨停的股票数量，连续涨停天数从大到小排序前5个"
 
