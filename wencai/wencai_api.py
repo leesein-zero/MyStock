@@ -34,13 +34,14 @@ def analysis_leader():
     print("正在获取高标概念数据>>>>>>>>>>>")
     headers_with_gn = __acquire_stock_list(TODAY_HEADERS_SORT, gn_condition)
 
-    output = "名称：{}  板数：{}  行业：{}  概念：{}"
+    # output = "名称：{}  板数：{}  行业：{}  概念：{}"
+    output = "名称：{}  板数：{}  行业：{}"
     ban_num_columns = headers.columns[5]
     for i in range(5):
         print(output.format(headers.get("股票简称")[i],
                             headers.get(ban_num_columns)[i],
                             headers_with_hy.get("xuangu_tableV1")["所属同花顺行业"][i],
-                            headers_with_gn.get("xuangu_tableV1")["所属概念"][i]
+                            # headers_with_gn.get("xuangu_tableV1")["所属概念"][i]
                             ))
 
 
@@ -84,7 +85,8 @@ def __analysis_gn(stock_list, topn):
     """
     flattened_list = []
     for i in stock_list.get("xuangu_tableV1")["所属概念"]:
-        flattened_list.extend(i.split(";"))
+        if isinstance(i, str):
+            flattened_list.extend(i.split(";"))
 
     # 过滤不需要的概念关键字
     flattened_list = [i for i in flattened_list if i not in settings.gn_filter]

@@ -23,7 +23,8 @@ def count_stocks_num(prompt):
     """
     request_data["question"] = prompt
     res = requests.post(request_url, json=request_data, headers=headers())
-    return res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][0]["data"]["meta"]["extra"]["code_count"]
+    print("{} 解析完毕".format(prompt))
+    return res.json()["data"]["answer"][0]["txt"][0]["content"]["components"][1]["data"]["meta"]["extra"]["code_count"]
 
 
 def get_token():
