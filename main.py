@@ -1,6 +1,5 @@
-from native import native_api
+from data_source.native import native_api
 from settings import *
-from wencai import wencai_api
 import psycopg2
 from datetime import datetime
 
@@ -73,8 +72,8 @@ def insert_daily_stock(
 
 if __name__ == '__main__':
     # 不写则取今天
-    expect_date = None
-    # expect_date = "2025-01-13"
+    # expect_date = None
+    expect_date = "2025-02-19"
 
     parse_date = datetime.now().date()
 

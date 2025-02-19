@@ -1,7 +1,7 @@
 from collections import Counter
 
 import settings
-import wencai.wencai as wc
+from data_source.wencai import wencai as wc
 from settings import *
 
 
