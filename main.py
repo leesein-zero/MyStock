@@ -73,7 +73,7 @@ def insert_daily_stock(
 if __name__ == '__main__':
     # 不写则取今天
     # expect_date = None
-    expect_date = "2025-02-19"
+    expect_date = "2025-02-20"
 
     parse_date = datetime.now().date()
 
